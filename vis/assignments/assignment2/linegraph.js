@@ -36,9 +36,10 @@ function drawHashMarksForXAxes() {
   var hashMarkU = hashMarkB - HASHMARKL
   for (var i = 0; i < numHashMarks; ++i) {
     var hashMarkX = startX + (i * unitDist)
-    stroke(51)
-    line(hashMarkX, hashMarkB + HASHMARKL, hashMarkX, hashMarkB)
+
     if (i % 4 == 0) {
+      stroke(51)
+      line(hashMarkX, hashMarkB + HASHMARKL, hashMarkX, hashMarkB)
       push()
       var x = hashMarkX
       var y = hashMarkB + 5
