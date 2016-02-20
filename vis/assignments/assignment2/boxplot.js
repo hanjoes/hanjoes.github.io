@@ -36,7 +36,7 @@ var iqr
 var outliers = []
 
 function preload() {
-  table = loadTable("presidents_fake.csv", "csv", "header")
+  table = loadTable("presidents.csv", "csv", "header")
 }
 
 // only for display purpose, bad coding yikes!
