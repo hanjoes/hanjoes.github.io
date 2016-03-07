@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Traffic Sign Data</title>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+  <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+  <style>
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12pt;
+  }
+
+  p {
+    width: 800px;
+  }
+
+  .axis path, .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+  }
+
+  .heatmap  {
+    /*stroke: black;
+    fill: black;*/
+  }
+
+  .control {
+    fill: #009999;
+  }
+
+  .control-label {
+    text-anchor: middle;
+  }
+
+  .control:hover {
+    cursor: pointer;
+    fill: #336699;
+  }
+
+  </style>
+</head>
+<body>
+  <h2>Traffic Sign Data</h2>
+  <p>
+    In a study into the effect that warning signs have on speeding patterns, Cambridgeshire County Council considered 14
+    pairs of locations. The locations were paired to account for factors such as traffic volume and type of road. One site
+    in each pair had a sign erected warning of the dangers of speeding and asking drivers to slow down. No action was taken
+    at the second site. Three sets of measurements were taken at each site. Each set of measurements was nominally of the
+    speeds of 100 cars but not all sites have exactly 100 measurements. These speed measurements were taken before the
+    erection of the sign, shortly after the erection of the sign, and again after the sign had been in place for some time.
+  </p>
+
+
+  <script>
+
+  // define margin such that we don't need to think of this later.
+
+  var m = {t:50,b:100,l:100,r:100};
+  var h = 450 - m.t - m.b;
+  var w = 800 - m.l - m.r;
+  var p = 2;
+
+  // control area
+
+  var control = d3.select("body").append("svg")
+  .attr("width", w + m.l + m.r).attr("height", 80)
+  .append("g").attr("transform", "translate(" + m.l + ",0)");
+
+  var bw = 15,
+  bp = 23,
+  tp = 30;
+
+
+  var groups = [1,2,3,4,5,6,7,8,9,10,11,12,13,14];
+  groups.forEach(function(i) {
+    control.append("rect")
+    .attr("x", i * (bw + bp))
+    .attr("y", bw)
+    .attr("width", bw)
+    .attr("height", bw)
+    .attr("class", "control")
+    .attr("id", i)
+    .on("click", function() {
+      display(i);
+    });
+
+    control.append("text")
+    .attr("x", i * (bw + bp) + bw / 2)
+    .attr("y", bw + tp)
+    .attr("class", "control-label")
+    .text(i);
+  });
+
+  // main canvas
+
+  var svg = d3.select("body").append("svg")
+  .attr("width", w + m.l + m.r)
+  .attr("height", h + m.t + m.b)
+  .append("g")
+  .attr("transform", "translate(" + m.l + "," + m.t + ")");
+
+  var xDomain = ["Before", "Shortly After", "After A While"],
+  yDomain = ["No Sign", "Sign"];
+
+  var x = d3.scale.ordinal().domain(xDomain).rangeBands([0, w]),
+  y = d3.scale.ordinal().domain(yDomain).rangeBands([0, h]);
+
+  var xAxis = d3.svg.axis()
+  .orient("bottom")
+  .tickSize(4)
+  .outerTickSize(0)
+  .scale(x),
+  yAxis = d3.svg.axis()
+  .orient("left")
+  .tickSize(4)
+  .outerTickSize(0)
+  .scale(y);
+
+  var colors = [d3.rgb(153,204,255), d3.rgb(153, 153, 255), d3.rgb(153, 102, 255), d3.rgb(153, 51, 255)];
+  var colorScale = d3.scale.quantile().range(colors);
+  var colorDomain; // generated dynamically
+
+  svg.append("g")
+  .attr("class", "axis")
+  .attr("transform", "translate(0," + h + ")")
+  .call(xAxis);
+  svg.append("g").attr("class", "axis").call(yAxis);
+
+  var canvas = svg.append("g");
+
+  // choose a pairs to display.
+  var display = function(pair) {
+    d3.csv("data/amis.csv", function(d) {
+      d["speed"] = +d["speed"];
+      d["period"] = +d["period"];
+      d["warning"] = +d["warning"];
+      d["pair"] = +d["pair"];
+      return d;
+    },
+    function(input) {
+      var pairs = input.filter(function(d) { return d.pair === pair; });
+
+      // nest data first by whether there is a warning, then by periods
+      var nested = d3.nest()
+      .key(function(d) { return d.warning; })
+      .key(function(d) { return d.period; })
+      .entries(pairs);
+
+      // at last we will only get 6 processed entries.
+      var processed = [
+        {period: 1, warning: 1, speed: avg(filterBy(nested, 1, 1))},
+        {period: 2, warning: 1, speed: avg(filterBy(nested, 1, 2))},
+        {period: 3, warning: 1, speed: avg(filterBy(nested, 1, 3))},
+        {period: 1, warning: 2, speed: avg(filterBy(nested, 2, 1))},
+        {period: 2, warning: 2, speed: avg(filterBy(nested, 2, 2))},
+        {period: 3, warning: 2, speed: avg(filterBy(nested, 2, 3))}
+      ];
+
+      colorDomain = d3.extent(processed, function(entry) { return entry.speed; })
+      colorScale.domain(colorDomain);
+
+      var rects = canvas.selectAll("rect").data(processed);
+
+      rects.enter().append("rect").attr("class", "heatmap");
+
+      rects.exit().transition().duration(1000).remove();
+
+      rects.transition().duration(1000)
+      .attr("x", function(d) { return x(xDomain[d.period-1]) + p / 2; })
+      .attr("y", function(d) { return y(yDomain[d.warning-1]) + p / 2; })
+      .attr("width", x.rangeBand() - p)
+      .attr("height", y.rangeBand() - p)
+      .style("fill", function(d) {
+        return colorScale(d.speed); });
+
+        // create legend
+        var legend = svg.selectAll(".legend")
+        .data([0].concat(colorScale.quantiles()), function(d) { return d; });
+
+        legend.enter().append("g")
+        .attr("class", "legend");
+
+        legend.exit().remove();
+
+        legend.append("rect")
+        .attr("x", function(d, i) { return x.rangeBand() * i * 3 / colors.length; })
+        .attr("y", h + 30)
+        .attr("width", x.rangeBand() * 3 / colors.length)
+        .attr("height", y.rangeBand() / 6)
+        .style("fill", function(d, i) { return colors[i]; });
+
+        legend.append("text")
+        .attr("class", "mono")
+        .text(function(d) { return "≥ " + Math.round(d) + "mph"; })
+        .attr("x", function(d, i) { return x.rangeBand() * i * 3 / colors.length; })
+        .attr("y", h + y.rangeBand() / 6 + 45);
+      });
+    }
+
+    var filterBy = function(nest, warning, period) {
+      var res = [];
+      var l = nest.filter(function(d) { return +d.key === warning; });
+      l[0].values.forEach(function(d, i) {
+        if (+d.key === period) {
+          res = res.concat(d.values);
+        }
+      });
+      return res;
+    }
+
+    var sum = function(entries) {
+      return entries.reduce(function(pv, cv, ci, a) { return pv + cv.speed; }, 0);
+    }
+
+    var avg = function(entries) {
+      return sum(entries) / entries.length;
+    }
+
+    var median = function(entries) {
+      entries.sort(function(e1, e2) { return e1.speed - e2.speed; })
+      return entries[Math.floor(entries.length / 2)].speed;
+    }
+
+    display(1);
+
+    </script>
+
+  </body>
+  </html>

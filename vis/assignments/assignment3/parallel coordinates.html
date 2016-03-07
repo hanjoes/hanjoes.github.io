@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Parallel Coordinates</title>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+  <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+  <style>
+  body {
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  .foreground path {
+    fill: none;
+    stroke-opacity: .5;
+    stroke-width: 1.5px;
+    stroke: steelblue;
+    shape-rendering: crispEdges;
+  }
+
+  .foreground path.fade {
+    fill: none;
+    stroke-opacity: .01;
+    stroke: #aaa;
+  }
+
+  .axis line, .axis path {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+  }
+
+  .axis text {
+    text-shadow: 0 1px 0 #fff;
+    cursor: move;
+  }
+
+  .axis .axis-title {
+    font-size: 11pt;
+    font-weight: bold;
+  }
+
+  .brush {
+    fill-opacity: .2;
+    stroke: #fff;
+    shape-rendering: crispEdges;
+  }
+
+  </style>
+</head>
+<body>
+  <h2> The Housing Data </h2>
+  <p>
+    The manuscript describing the data can be found <a href="www.spatial-statistics.com">here</a>.
+    The data are also available as Matlab files.
+  </p>
+
+  <p>
+    Note: The data displayed is a part of the original dataset.
+  </p>
+  <script>
+
+  // Constants
+  var houseValue = "median house value",
+  income = "median income",
+  age = "housing median age",
+  totalRooms = "total rooms",
+  totalBedrooms = "total bedrooms",
+  population = "population",
+  households = "households",
+  latitude = "latitude",
+  longitude = "longitude";
+
+  var margin = {top:50, left:100, bottom:200, right:160};
+
+  var valueRanges = ["housing"];// TODO: this should be the house value ranges.
+  var parameters = [houseValue, income, age, totalRooms, totalBedrooms, population, households];
+
+  var width = 1600 - margin.left - margin.right,
+  height = 900 - margin.top - margin.bottom;
+
+  var x = d3.scale.ordinal().domain(parameters).rangePoints([0, width]);
+  var y = {};// aggregates dependent related parameters.
+
+  var axis = d3.svg.axis().orient("left");
+  var color = d3.scale.category10();
+  var foreground;
+
+  var svg = d3.select("body").append("svg")
+  .attr("width", width + margin.left + margin.right)
+  .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+  .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+  d3.csv("data/housing.csv", function(data) {
+    parameters.forEach(function(p) {
+      data.forEach(function(d) { d[p] = +d[p]; });
+
+      y[p] = d3.scale.linear()
+      .domain(d3.extent(data, function(d) { return d[p]; }))
+      .range([height, 0]);
+      y[p].brush = d3.svg.brush()
+      .y(y[p])
+      .on("brush", brush);
+    });
+
+    // add foreground lines.
+    foreground = svg.append("g")
+    .attr("class", "foreground")
+    .selectAll("path")
+    .data(data)
+    .enter().append("path")
+    .attr("d", path);
+
+    // add a group element for each parameter.
+    var g = svg.selectAll(".parameter")
+    .data(parameters)
+    .enter().append("g")
+    .attr("class", "parameter")
+    .attr("transform", function(d) { return "translate(" + x(d) + ")"; })
+    .call(d3.behavior.drag()
+    .origin(function(d) { return {x: x(d)}; })
+    .on("dragstart", dragstart)
+    .on("drag", drag)
+    .on("dragend", dragend));
+
+    // add an axis and title.
+    g.append("g")
+    .attr("class", "axis")
+    .each(function(d) {
+      d3.select(this).call(axis.scale(y[d]));
+    })
+    .append("text")
+    .attr("text-anchor", "middle")
+    .attr("class", "axis-title")
+    .attr("y", -20)
+    .text(String)
+
+    // add a brush for each axis.
+    g.append("g")
+    .attr("class", "brush")
+    .each(function(d) { d3.select(this).call(y[d].brush); })
+    .selectAll("rect")
+    .attr("x", -8)
+    .attr("width", 16);
+
+    function dragstart(d) {
+      i = parameters.indexOf(d);
+    }
+
+    function drag(d) {
+      x.range()[i] = d3.event.x;
+      parameters.sort(function(a, b) { return x(a) - x(b); });
+      g.attr("transform", function(d) { return "translate(" + x(d) + ")"; });
+      foreground.attr("d", path);
+    }
+
+    function dragend(d) {
+      x.domain(parameters).rangePoints([0, width]);
+      var t = d3.transition().duration(500);
+      t.selectAll(".trait").attr("transform", function(d) { return "translate(" + x(d) + ")"; });
+      t.selectAll(".foreground path").attr("d", path);
+    }
+  });
+
+  var line = d3.svg.line()
+  .x(function(d) { return d[0]; })
+  .y(function(d) { return d[1]; });
+
+  function path(d) {
+    return line(parameters.map(function(p) {
+      return [x(p), y[p](d[p])];
+    }));
+  }
+
+  // Handles a brush event, toggling the display of foreground lines.
+  function brush() {
+    var actives = parameters.filter(function(p) { return !y[p].brush.empty(); }),
+    extents = actives.map(function(p) { return y[p].brush.extent(); });
+
+    foreground.classed("fade", function(d) {
+      return !actives.every(function(p, i) {
+        return extents[i][0] <= d[p] && d[p] <= extents[i][1];
+      });
+    });
+  }
+
+  </script>
+
+</body>
+</html>

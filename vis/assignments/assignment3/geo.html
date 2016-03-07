@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Earthquakes</title>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+  <script src="//d3js.org/topojson.v1.min.js"></script>
+  <script src="d3.tip.v0.6.3.js"></script>
+  <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+  <style>
+
+  .graticule {
+    fill: none;
+    stroke: #777;
+    stroke-opacity: .5;
+    stroke-width: .5px;
+  }
+
+  .land {
+    fill: #eee;
+    opacity: 0.7;
+  }
+
+  .boundary {
+    fill: none;
+    stroke: #fff;
+    stroke-width: .5px;
+  }
+
+  circle.point {
+    opacity: 0.5;
+  }
+
+  circle.point:hover {
+    fill:blue;
+    opacity: 1;
+  }
+
+  .d3-tip {
+    line-height: 1;
+    font-weight: bold;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border-radius: 2px;
+  }
+
+  /* Creates a small triangle extender for the tooltip */
+  .d3-tip:after {
+    box-sizing: border-box;
+    display: inline;
+    font-size: 10px;
+    width: 100%;
+    line-height: 1;
+    color: rgba(0, 0, 0, 0.8);
+    content: "\25BC";
+    position: absolute;
+    text-align: center;
+  }
+
+  /* Style northward tooltips differently */
+  .d3-tip.n:after {
+    margin: -1px 0 0 0;
+    top: 100%;
+    left: 0;
+  }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12pt;
+  }
+
+  </style>
+</head>
+<body>
+  <h2> Earthquake Data off Fiji</h2>
+  <p>
+    The data set give the locations of 1000 seismic events of MB > 4.0. The events occurred in a cube near Fiji since 1964.
+  </p>
+
+
+
+  <script>
+  var width = 960,
+  height = 960;
+
+  var projection = d3.geo.mercator()
+  .scale(650)
+  .rotate([180, 0])
+  .precision(.1);
+
+  var path = d3.geo.path()
+  .projection(projection);
+
+  var graticule = d3.geo.graticule();
+
+  var svg = d3.select("body").append("svg")
+  .attr("width", width)
+  .attr("height", height);
+
+  var colorScale = d3.scale.linear()
+  .range([255, 0]);
+
+  var tip = d3.tip()
+  .attr('class', 'd3-tip')
+  .offset([-10, 0])
+  .html(function(d) {
+    return "<strong>Magnitude:</strong> <span style='color:red'>" + d.mag + "</span>"
+    + "<strong> Depth:</strong> <span style='color:red'>" + d.depth + "km</span>"
+  })
+
+  svg.append("path")
+  .datum(graticule)
+  .attr("class", "graticule")
+  .attr("d", path);
+
+  svg.call(tip);
+
+  d3.json("data/world-50m.json", function(error, world) {
+    if (error) throw error;
+
+    svg.insert("path", ".graticule")
+    .datum(topojson.feature(world, world.objects.land))
+    .attr("class", "land")
+    .attr("d", path);
+
+    svg.insert("path", ".graticule")
+    .datum(topojson.mesh(world, world.objects.countries, function(a, b) { return a !== b; }))
+    .attr("class", "boundary")
+    .attr("d", path);
+
+    d3.csv("data/quakes.csv", type, function(error, data) {
+      colorScale.domain(d3.extent(data, function(d) { return d.depth; }));
+
+      svg.selectAll("circle")
+      .data(data)
+      .enter()
+      .append("circle")
+      .attr("cx", function(d) { return projection([d.long, d.lat])[0]; })
+      .attr("cy", function(d) { return projection([d.long, d.lat])[1]; })
+      .attr("r", function(d) { return d.mag * 2; })
+      .style("fill", function(d) { return d3.rgb(255, colorScale(d.depth), 0); })
+      .attr("class", "point")
+      .on("mouseover", tip.show)
+      .on("mouseout", tip.hide);
+    });
+  });
+
+  var type = function(d) {
+    d["lat"] = +d["lat"]
+    d["long"] = +d["long"]
+    d["depth"] = +d["depth"]
+    d["mag"] = +d["mag"]
+    d["stations"] = +d["stations"]
+    return d;
+  }
+
+  </script>
+
+</body>
+</html>

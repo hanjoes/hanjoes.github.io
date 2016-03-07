@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Scatter Plot Matrix</title>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+  <script src="d3.tip.v0.6.3.js"></script>
+  <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+  <style>
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  h3 {
+    color: gray;
+  }
+
+  .axis path, .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+  }
+
+  .axis text {
+    font-size: 8pt;
+  }
+
+  .bars {
+    fill: orange;
+  }
+
+  .bars:hover {
+    fill: orangered;
+  }
+
+  .axis .label {
+    font-size: 22pt;
+    font-weight: bold;
+  }
+
+  .d3-tip {
+    line-height: 1;
+    font-weight: bold;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border-radius: 2px;
+  }
+
+  /* Creates a small triangle extender for the tooltip */
+  .d3-tip:after {
+    box-sizing: border-box;
+    display: inline;
+    font-size: 10px;
+    width: 100%;
+    line-height: 1;
+    color: rgba(0, 0, 0, 0.8);
+    content: "\25BC";
+    position: absolute;
+    text-align: center;
+  }
+
+  /* Style northward tooltips differently */
+  .d3-tip.n:after {
+    margin: -1px 0 0 0;
+    top: 100%;
+    left: 0;
+  }
+
+  </style>
+</head>
+<body>
+  <h2>Coal Mine Disasters by Year</h2>
+  <h3>Bar-chart showing both density and intensity.</h3>
+
+  <script>
+
+  var m = {t:50,b:100,l:100,r:50},
+  w = 1000 - m.l - m.r,
+  h = 500 - m.t - m.b,
+  px = 0.035;
+  op = 1;
+
+  var xLabelOffset = 60;
+  var yLabelOffset = 60;
+
+  var svg = d3.select("body").append("svg")
+  .attr("width", w + m.l + m.r)
+  .attr("height", h + m.t + m.b)
+  .append("g")
+  .attr("transform", "translate(" + m.l + "," + m.t + ")");
+
+  var x = d3.scale.ordinal().rangeBands([0,w], px, op);
+  var y = d3.scale.linear().range([h,0]);
+
+  var xa = d3.svg.axis().scale(x).orient("bottom"),
+  ya = d3.svg.axis().scale(y).orient("left").ticks(5);
+
+  var xag = svg.append("g").attr("class","axis")
+  .attr("transform", "translate(0," + h + ")")
+  var yag = svg.append("g").attr("class","axis")
+
+  var xal = xag.append("text")
+  .style("text-anchor", "middle")
+  .attr("class", "label")
+  .attr("transform", "translate("  + w / 2 +  "," + xLabelOffset + ")")
+  .text("Years");
+  var yal = yag.append("text")
+  .style("text-anchor", "middle")
+  .attr("transform", "translate(-" + yLabelOffset + "," + (h / 2) + ") rotate(-90)")
+  .attr("class", "label")
+  .text("Num Disasters");
+
+  d3.csv("data/coal.csv",
+  function(d) {
+    d["date"] = Math.floor(+d["date"]);
+    return d;
+  },
+  function(input) {
+    var nested = d3.nest()
+    .key(function(d) { return d["date"]; })
+    .entries(input);
+
+    var years = []
+    var processed = [];// play around with function hoisting..
+    nested.forEach(function(o) {
+      years.push(+o.key);
+      processed.push({year:+o.key,num:o.values.length});
+    });
+
+    x.domain(years);
+    y.domain(d3.extent(processed, function(p) { return p.num; }));
+
+    xa.tickValues(x.domain().filter(function(d, i) { return i % 3 == 0; }))
+
+    xag.call(xa);
+    yag.call(ya);
+
+    var tip = d3.tip()
+    .attr('class', 'd3-tip')
+    .offset([-10, 0])
+    .html(function(d) {
+      return "<strong>Disasters:</strong> <span style='color:red'>" + d.num + " cases.</span>"
+    })
+    svg.call(tip);
+
+    var rects = svg.selectAll("rect").data(processed);
+
+    rects.enter().append("rect").attr("class", "bars");
+
+    rects.attr("x", function(p) { return x(p.year); })
+    .attr("y", function(p) { return y(p.num); })
+    .attr("width", x.rangeBand())
+    .attr("height", function(p) { return h - y(p.num); })
+    .on("mouseover", tip.show)
+    .on("mouseout", tip.hide);
+  });
+
+  </script>
+
+</body>
+</html>

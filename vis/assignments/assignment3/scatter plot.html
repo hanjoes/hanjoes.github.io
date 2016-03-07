@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Scatter Plot Matrix</title>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+  <script src="d3.tip.v0.6.3.js"></script>
+  <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+  <style>
+  body {
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  .axis path, .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+  }
+
+  .axis text {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 8pt;
+  }
+
+  .axis .label {
+    font-size: 22pt;
+  }
+
+  svg circle {
+    fill: #339999;
+    opacity: .8;
+  }
+
+  svg circle:hover {
+    fill: blue;
+    opacity: .8;
+  }
+
+  .d3-tip {
+    line-height: 1;
+    font-weight: bold;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border-radius: 2px;
+  }
+
+  /* Creates a small triangle extender for the tooltip */
+  .d3-tip:after {
+    box-sizing: border-box;
+    display: inline;
+    font-size: 10px;
+    width: 100%;
+    line-height: 1;
+    color: rgba(0, 0, 0, 0.8);
+    content: "\25BC";
+    position: absolute;
+    text-align: center;
+  }
+
+  /* Style northward tooltips differently */
+  .d3-tip.n:after {
+    margin: -1px 0 0 0;
+    top: 100%;
+    left: 0;
+  }
+
+  .clickable:hover {
+    cursor: pointer;
+  }
+
+  </style>
+</head>
+<body>
+  <h2> The Housing Data </h2>
+  <p>
+    The manuscript describing the data can be found <a href="www.spatial-statistics.com">here</a>.
+    The data are also available as Matlab files.
+  </p>
+
+  <p>
+    Note: The data displayed is a part of the original dataset.
+  </p>
+
+  <script>
+  // define margin such that we don't need to think of this later.
+  var m = {t:50,b:100,l:100,r:50};
+  var h = 800 - m.t - m.b;
+  var w = 1000 - m.l - m.r;
+
+  var xLabelOffset = 60;
+  var yLabelOffset = 60;
+
+  var houseValue = "median house value";
+  var income = "median income";
+  var age = "housing median age";
+  var totalRooms = "total rooms";
+  var totalBedrooms = "total bedrooms";
+  var population = "population";
+  var households = "households";
+  var latitude = "latitude";
+  var longitude = "longitude";
+
+  var properties = [
+    houseValue,
+    income,
+    age,
+    totalRooms,
+    totalBedrooms,
+    population,
+    households
+  ];
+
+  var x = d3.scale.linear().range([0, w]);
+  var y = d3.scale.linear().range([h, 0]);
+
+  // define x axis
+  var xAxis = d3.svg.axis()
+  .scale(x)
+  .orient("bottom")
+  .ticks(8, "s")
+  .tickSize(5);
+
+  // define y axis
+  var yAxis = d3.svg.axis()
+  .scale(y)
+  .orient("left")
+  .ticks(8, "s")
+  .tickSize(5);
+
+  // setup the drawing canvas
+  var svg = d3.select("body").append("svg")
+  .attr("width",  w + m.l + m.r)
+  .attr("height", h + m.t + m.b)
+  .append("g")
+  .attr("transform", "translate(" + m.l + "," + m.t + ")");
+
+  var maxByProperty = {},
+  n = properties.length;
+
+  var xAxisGroup = svg.append("g")
+  .attr("class", "x axis")
+  .attr("transform", function(p, i) { return "translate(0," + (h) + ")"; })
+  var xLabel = xAxisGroup.append("text")
+  .style("text-anchor", "middle")
+  .attr("class", "label")
+  .attr("transform", "translate("  + w / 2 +  "," + xLabelOffset + ")")
+
+  var yAxisGroup = svg.append("g")
+  .attr("class", "y axis")
+  var yLabel = yAxisGroup.append("text")
+  .style("text-anchor", "middle")
+  .attr("transform", "translate(-" + yLabelOffset + "," + (h / 2) + ") rotate(-90)")
+  .attr("class", "label")
+  .text(houseValue);
+
+  var dataGroup = svg.append("g")
+
+  var display = function(property) {
+    d3.csv("data/housing.csv", function(error, data) {
+      if (error) throw error;
+
+      // string to number
+      properties.forEach(function(p) {
+        data.forEach(function(d) {
+          d[p] = +d[p];
+        });
+      });
+
+      // initialize domains
+      properties.forEach(function(p) {
+        maxByProperty[p] = d3.max(data, function(d) { return d[p]; });
+      });
+
+      x.domain([0, maxByProperty[property]]);
+      y.domain([0, maxByProperty[houseValue]]);
+
+      var tip = d3.tip()
+      .attr('class', 'd3-tip')
+      .offset([-10, 0])
+      .html(function(d) {
+        return "<strong>" + property + ":</strong> <span style='color:steelblue'>" + d.xv + "</span>"
+        + "<strong> median house value:</strong> <span style='color:steelblue'>" + Math.floor(d.yv) + " USD</span>"
+      })
+
+      svg.call(tip);
+
+      xLabel.text(property)
+
+      // initialize all x axes
+      xAxisGroup.transition()
+      .duration(1000)
+      .call(xAxis);
+
+      // initialize all y axes
+      yAxisGroup.transition()
+      .duration(1000)
+      .call(yAxis);
+
+      var input = process(data, property, x, y);
+      var circles = dataGroup.selectAll("circle").data(input);
+
+      circles.enter()
+      .append("circle")
+      .attr("r", 4)
+      .on("mouseover", tip.show)
+      .on("mouseout", tip.hide);
+
+      circles.exit().transition().duration(1000).remove();
+
+      circles.transition().duration(1000)
+      .attr("cx", function(d) { return d.x; })
+      .attr("cy", function(d) { return d.y; });
+    });
+  }
+
+  function process(data, property, xs, ys) {
+    var res = [];
+    data.forEach(function(d) {
+      res.push({xv: d[property],x:xs(d[property]),yv:d[houseValue],y:ys(d[houseValue])});
+    });
+    return res;
+  }
+  
+  d3.select("body").append("h3").text("Please click the following:")
+
+  // setup click areas
+  properties.forEach(function(p, i) {
+    d3.select("body").append("p")
+    .attr("class", "clickable")
+    .attr("id", p).text(p)
+    .on("click", function() {
+      display(p);
+    });
+  });
+
+  display(age);
+
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Scatter Plot Matrix</title>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+  <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+  <style>
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  svg {
+    padding: 20px;
+  }
+
+  .axis,
+  .frame {
+    shape-rendering: crispEdges;
+  }
+
+  .axis line {
+    stroke: #ddd;
+  }
+
+  .axis path {
+    display: none;
+  }
+
+  .axis text {
+    font-size: 8pt;
+  }
+
+  .cell text {
+    font-weight: bold;
+    font-size: 8pt;
+    text-transform: capitalize;
+  }
+
+  .frame {
+    fill: none;
+    stroke: #aaa;
+  }
+
+  circle {
+    fill-opacity: .7;
+  }
+
+  circle.hidden {
+    fill: #ccc !important;
+  }
+
+  .extent {
+    fill: #000;
+    fill-opacity: .125;
+    stroke: #fff;
+  }
+
+  </style>
+</head>
+<body>
+  <h2> The Housing Data </h2>
+  <p>
+    The manuscript describing the data can be found <a href="www.spatial-statistics.com">here</a>.
+    The data are also available as Matlab files.
+  </p>
+
+  <p>
+    Note: The data displayed is a part of the original dataset.
+  </p>
+
+  <script>
+  // define margin such that we don't need to think of this later.
+  var padding = 18;
+  var width = 1239;
+  var size = 159;
+
+  var houseValue = "median house value";
+  var income = "median income";
+  var age = "housing median age";
+  var totalRooms = "total rooms";
+  var totalBedrooms = "total bedrooms";
+  var population = "population";
+  var households = "households";
+  var latitude = "latitude";
+  var longitude = "longitude";
+
+  var properties = [
+    houseValue,
+    income,
+    age,
+    totalRooms,
+    totalBedrooms,
+    population,
+    households
+  ];
+
+  var x = d3.scale.linear()
+  .range([padding / 2, size - padding / 2]);
+  var y = d3.scale.linear()
+  .range([size - padding / 2, padding / 2]);
+
+  // define x axis
+  var xAxis = d3.svg.axis()
+  .scale(x)
+  .orient("bottom")
+  .ticks(5, "s");
+
+  // define y axis
+  var yAxis = d3.svg.axis()
+  .scale(y)
+  .orient("left")
+  .ticks(5, "s");
+
+  var color = d3.scale.category10();
+
+  d3.csv("data/housing.csv", function(error, data) {
+    if (error) throw error;
+
+    // string to number
+    properties.forEach(function(p) {
+      data.forEach(function(d) {
+        d[p] = +d[p];
+      });
+    });
+
+    var domainByProperty = {},
+    n = properties.length;
+
+    properties.forEach(function(property) {
+      domainByProperty[property] = d3.extent(data, function(d) { return d[property]; });
+    });
+
+    xAxis.tickSize(size * n);
+    yAxis.tickSize(-size * n);
+
+    var brush = d3.svg.brush()
+    .x(x)
+    .y(y)
+    .on("brushstart", brushstart)
+    .on("brush", brushmove)
+    .on("brushend", brushend);
+
+    // setup the drawing canvas
+    var svg = d3.select("body").append("svg")
+    .attr("width",  size * n + padding)
+    .attr("height", size * n + padding)
+    .append("g")
+    .attr("transform", "translate(" + padding + "," + padding / 2 + ")");
+
+    // initialize all x axes
+    svg.selectAll(".x.axis")
+    .data(properties)
+    .enter().append("g")
+    .attr("class", "x axis")
+    .attr("transform", function(p, i) { return "translate(" + ((n - i - 1) * size) + ",0)"; })
+    .each(function(p) {
+      x.domain(domainByProperty[p]);
+      d3.select(this).call(xAxis);
+    });
+
+    // initialize all y axes
+    svg.selectAll(".y.axis")
+    .data(properties)
+    .enter().append("g")
+    .attr("class", "y axis")
+    .attr("transform", function(p, i) { return "translate(0," + (i * size) + ")"; })
+    .each(function(p) {
+      y.domain(domainByProperty[p]);
+      d3.select(this).call(yAxis);
+    });
+
+    var cell = svg.selectAll(".cell")
+    .data(cross(properties, properties))
+    .enter().append("g")
+    .attr("class", "cell")
+    .attr("transform", function(d) { return "translate(" + (n - d.i - 1) * size + "," + d.j * size + ")"; })
+    .each(plot)
+
+    // titles for the diagonal.
+    cell.filter(function(d) { return d.i === d.j; }).append("text")
+    .attr("x", padding)
+    .attr("y", padding)
+    .attr("dy", ".71em")
+    .text(function(d) { return d.x; });
+
+    cell.call(brush);
+
+    function plot(p) {
+      var cell = d3.select(this);
+
+      x.domain(domainByProperty[p.x]);
+      y.domain(domainByProperty[p.y]);
+
+      cell.append("rect")
+      .attr("class", "frame")
+      .attr("x", padding / 2)
+      .attr("y", padding / 2)
+      .attr("width", size - padding)
+      .attr("height", size - padding);
+
+      cell.selectAll("circle")
+      .data(data)
+      .enter().append("circle")
+      .attr("cx", function(d) { return x(d[p.x]); })
+      .attr("cy", function(d) { return y(d[p.y]); })
+      .attr("r", 1)
+      .style("fill", "steelblue");
+    }
+
+    var brushCell;
+
+    // Clear the previously-active brush, if any.
+    function brushstart(p) {
+      if (brushCell !== this) {
+        d3.select(brushCell).call(brush.clear());
+        x.domain(domainByProperty[p.x]);
+        y.domain(domainByProperty[p.y]);
+        brushCell = this;
+      }
+    }
+
+    // Highlight the selected circles.
+    function brushmove(p) {
+      var e = brush.extent();
+      svg.selectAll("circle").classed("hidden", function(d) {
+        return e[0][0] > d[p.x] || d[p.x] > e[1][0]
+        || e[0][1] > d[p.y] || d[p.y] > e[1][1];
+      });
+    }
+
+    // If the brush is empty, select all circles.
+    function brushend() {
+      if (brush.empty()) svg.selectAll(".hidden").classed("hidden", false);
+    }
+
+    d3.select(self.frameElement).style("height", size * n + padding + 20 + "px");
+  });
+
+  function cross(a, b) {
+    var c = [], n = a.length, m = b.length, i, j;
+    for (i = -1; ++i < n;) for (j = -1; ++j < m;) c.push({x: a[i], i: i, y: b[j], j: j});
+    return c;
+  }
+
+  </script>
+
+</body>
+</html>
