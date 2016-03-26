@@ -1,4 +1,4 @@
-/*! p5.js v0.4.21 January 04, 2016 */
+/*! p5.js v0.4.23 March 04, 2016 */
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.p5 = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 
 },{}],2:[function(_dereq_,module,exports){
@@ -5646,20 +5646,21 @@ p5.prototype.sphere = function(radius, detail){
 };
 
 /**
- * Draw an ellipsoid with given raduis
+ * Draw an ellipsoid with given radius
  * @method ellipsoid
  * @param  {Number} radiusx           xradius of circle
  * @param  {Number} radiusy           yradius of circle
  * @param  {Number} radiusz           zradius of circle
- * @param  {Number} [detail]          number of segments,
- *                                    the more segments the smoother geometry
- *                                    default is 24. Avoid detail number above
- *                                    150. It may crash the browser.
+ * @param  {Number} [detail]          Number of segments.
+ *                                    The more segments, the smoother the
+ *                                    geometry (default is 24). Avoid detail
+ *                                    number above 150. It may crash the
+ *                                    browser.
  * @return {p5}                       the p5 object
  * @example
  * <div>
  * <code>
- * // draw an ellipsoid with radius 200, 300 and 400 .
+ * // draw an ellipsoid with radius 200, 300 and 400
  * function setup(){
  *   createCanvas(100, 100, WEBGL);
  * }
@@ -5722,7 +5723,7 @@ p5.prototype.ellipsoid = function(radiusx, radiusy, radiusz, detail){
  * @example
  * <div>
  * <code>
- * //draw a spining sylinder with radius 200 and height 200
+ * //draw a spinning cylinder with radius 200 and height 200
  * function setup(){
  *   createCanvas(100, 100, WEBGL);
  * }
@@ -5818,7 +5819,7 @@ p5.prototype.cylinder = function(radius, height, detail){
  * @example
  * <div>
  * <code>
- * //draw a spining cone with radius 200 and height 200
+ * //draw a spinning cone with radius 200 and height 200
  * function setup(){
  *   createCanvas(100, 100, WEBGL);
  * }
@@ -5891,7 +5892,7 @@ p5.prototype.cone = function(radius, height, detail){
  * @example
  * <div>
  * <code>
- * //draw a spining torus with radius 200 and tube radius 60
+ * //draw a spinning torus with radius 200 and tube radius 60
  * function setup(){
  *   createCanvas(100, 100, WEBGL);
  * }
@@ -5950,7 +5951,7 @@ p5.prototype.torus = function(radius, tubeRadius, detail){
  * @example
  * <div>
  * <code>
- * //draw a spining box with width, height and depth 200
+ * //draw a spinning box with width, height and depth 200
  * function setup(){
  *   createCanvas(100, 100, WEBGL);
  * }
@@ -6327,7 +6328,7 @@ p5.Renderer3D.prototype.strokeWeight = function() {
 //////////////////////////////////////////////
 
 p5.Renderer3D.prototype.fill = function(r, g, b, a) {
-  var color = this._pInst.color.apply(this._pInst, arguments);
+  var color = this._pInst.color.apply(this, arguments);
   var colorNormalized = color._array;
   this.curColor = colorNormalized;
   this.drawMode = 'fill';
@@ -6335,7 +6336,7 @@ p5.Renderer3D.prototype.fill = function(r, g, b, a) {
 };
 
 p5.Renderer3D.prototype.stroke = function(r, g, b, a) {
-  var color = this._pInst.color.apply(this._pInst, arguments);
+  var color = this._pInst.color.apply(this, arguments);
   var colorNormalized = color._array;
   this.curColor = colorNormalized;
   this.drawMode = 'stroke';
@@ -8993,9 +8994,17 @@ p5.prototype.color = function() {
   if (arguments[0] instanceof p5.Color) {
     return arguments[0];  // Do nothing if argument is already a color object.
   } else if (arguments[0] instanceof Array) {
-    return new p5.Color(this, arguments[0]);
+    if (this instanceof p5.Renderer) {
+      return new p5.Color(this, arguments[0]);
+    } else {
+      return new p5.Color(this._renderer, arguments[0]);
+    }
   } else {
-    return new p5.Color(this, arguments);
+    if (this instanceof p5.Renderer) {
+      return new p5.Color(this, arguments);
+    } else {
+      return new p5.Color(this._renderer, arguments);
+    }
   }
 };
 
@@ -9271,11 +9280,11 @@ var color_conversion = _dereq_('./color_conversion');
  * @class p5.Color
  * @constructor
  */
-p5.Color = function(pInst, vals) {
+p5.Color = function(renderer, vals) {
 
   // Record color mode and maxes at time of construction.
-  this.mode = pInst._renderer._colorMode;
-  this.maxes = pInst._renderer._colorMaxes;
+  this.mode = renderer._colorMode;
+  this.maxes = renderer._colorMaxes;
 
   // Calculate normalized RGBA values.
   if (this.mode !== constants.RGB &&
@@ -9283,7 +9292,7 @@ p5.Color = function(pInst, vals) {
       this.mode !== constants.HSB) {
     throw new Error(this.mode + ' is an invalid colorMode.');
   } else {
-    this._array = p5.Color._parseInputs.apply(pInst, vals);
+    this._array = p5.Color._parseInputs.apply(renderer, vals);
   }
 
   // Expose closest screen color.
@@ -9668,8 +9677,8 @@ var colorPatterns = {
  */
 p5.Color._parseInputs = function() {
   var numArgs = arguments.length;
-  var mode = this._renderer._colorMode;
-  var maxes = this._renderer._colorMaxes;
+  var mode = this._colorMode;
+  var maxes = this._colorMaxes;
   var results = [];
 
   if (numArgs >= 3) {  // Argument is a list of component values.
@@ -10709,14 +10718,14 @@ p5.prototype.point = function() {
  * clockwise or counter-clockwise around the defined shape.
  *
  * @method quad
- * @param {type} x1 the x-coordinate of the first point
- * @param {type} y1 the y-coordinate of the first point
- * @param {type} x2 the x-coordinate of the second point
- * @param {type} y2 the y-coordinate of the second point
- * @param {type} x3 the x-coordinate of the third point
- * @param {type} y3 the y-coordinate of the third point
- * @param {type} x4 the x-coordinate of the fourth point
- * @param {type} y4 the y-coordinate of the fourth point
+ * @param {Number} x1 the x-coordinate of the first point
+ * @param {Number} y1 the y-coordinate of the first point
+ * @param {Number} x2 the x-coordinate of the second point
+ * @param {Number} y2 the y-coordinate of the second point
+ * @param {Number} x3 the x-coordinate of the third point
+ * @param {Number} y3 the y-coordinate of the third point
+ * @param {Number} x4 the x-coordinate of the fourth point
+ * @param {Number} y4 the y-coordinate of the fourth point
  * @return {p5}     the p5 object
  * @example
  * <div>
@@ -11748,6 +11757,9 @@ var p5 = function(sketch, node, sync) {
     if (typeof context.preload === 'function') {
       for (var f in this._preloadMethods) {
         context[f] = this._preloadMethods[f][f];
+        if (context[f] && this) {
+          context[f] = context[f].bind(this);
+        }
       }
     }
 
@@ -12380,7 +12392,7 @@ p5.prototype.curvePoint = function(a, b, c, d, t) {
 /**
  * Evaluates the tangent to the curve at position t for points a, b, c, d.
  * The parameter t varies between 0 and 1, a and d are points on the curve,
- * and b and c are the control points
+ * and b and c are the control points.
  *
  * @method curveTangent
  * @param {Number} a coordinate of first point on the curve
@@ -12801,8 +12813,9 @@ p5.prototype.height = 0;
  * be called on user input, for example, on mouse press like the example
  * below.
  *
- * @method fullScreen
- * @param  {Boolean} [val] whether the sketch should be fullscreened or not
+ * @method fullscreen
+ * @param  {Boolean} [val] whether the sketch should be in fullscreen mode
+ * or not
  * @return {Boolean} current fullscreen state
  * @example
  * <div>
@@ -12813,14 +12826,14 @@ p5.prototype.height = 0;
  * }
  * function mousePressed() {
  *   if (mouseX > 0 && mouseX < 100 && mouseY > 0 && mouseY < 100) {
- *     var fs = fullScreen();
- *     fullScreen(!fs);
+ *     var fs = fullscreen();
+ *     fullscreen(!fs);
  *   }
  * }
  * </code>
  * </div>
  */
-p5.prototype.fullScreen = function(val) {
+p5.prototype.fullscreen = function(val) {
   // no arguments, return fullscreen or not
   if (typeof val === 'undefined') {
     return document.fullscreenElement ||
@@ -13276,27 +13289,110 @@ function friendlyWelcome() {
   report(str, 'println', '#4DB200'); // auto dark green
 } */
 
-// This is a list of p5 functions/variables that are commonly misused
-// by beginners at top-level code, outside of setup/draw. We'd like to
-// detect these errors and help the user by suggesting they move them
+// This is a lazily-defined list of p5 symbols that may be
+// misused by beginners at top-level code, outside of setup/draw. We'd like
+// to detect these errors and help the user by suggesting they move them
 // into setup/draw.
 //
 // For more details, see https://github.com/processing/p5.js/issues/1121.
-var misusedAtTopLevelCode = [
-  'color',
-  'random'
-];
+var misusedAtTopLevelCode = null;
+var FAQ_URL = 'https://github.com/processing/p5.js/wiki/' +
+              'Frequently-Asked-Questions' +
+              '#why-cant-i-assign-variables-using-p5-functions-and-' +
+              'variables-before-setup';
 
-function helpForMisusedAtTopLevelCode(e) {
-  misusedAtTopLevelCode.forEach(function(name) {
-    if (e.message && e.message.indexOf(name) !== -1) {
-      console.log('%c Did you just try to use p5.js\'s \'' + name + '\' ' +
-                  'function or variable? If so, you may want to ' +
-                  'move it into your sketch\'s setup() function.',
-                  'color: #B40033' /* Dark magenta */);
+function defineMisusedAtTopLevelCode() {
+  var uniqueNamesFound = {};
+
+  var getSymbols = function(obj) {
+    return Object.getOwnPropertyNames(obj).filter(function(name) {
+      if (name[0] === '_') {
+        return false;
+      }
+      if (name in uniqueNamesFound) {
+        return false;
+      }
+
+      uniqueNamesFound[name] = true;
+
+      return true;
+    }).map(function(name) {
+      var type;
+
+      if (typeof(obj[name]) === 'function') {
+        type = 'function';
+      } else if (name === name.toUpperCase()) {
+        type = 'constant';
+      } else {
+        type = 'variable';
+      }
+
+      return {name: name, type: type};
+    });
+  };
+
+  misusedAtTopLevelCode = [].concat(
+    getSymbols(p5.prototype),
+    // At present, p5 only adds its constants to p5.prototype during
+    // construction, which may not have happened at the time a
+    // ReferenceError is thrown, so we'll manually add them to our list.
+    getSymbols(_dereq_('./constants'))
+  );
+
+  // This will ultimately ensure that we report the most specific error
+  // possible to the user, e.g. advising them about HALF_PI instead of PI
+  // when their code misuses the former.
+  misusedAtTopLevelCode.sort(function(a, b) {
+    return b.name.length - a.name.length;
+  });
+}
+
+function helpForMisusedAtTopLevelCode(e, log) {
+  if (!log) {
+    log = console.log.bind(console);
+  }
+
+  if (!misusedAtTopLevelCode) {
+    defineMisusedAtTopLevelCode();
+  }
+
+  // If we find that we're logging lots of false positives, we can
+  // uncomment the following code to avoid displaying anything if the
+  // user's code isn't likely to be using p5's global mode. (Note that
+  // setup/draw are more likely to be defined due to JS function hoisting.)
+  //
+  //if (!('setup' in window || 'draw' in window)) {
+  //  return;
+  //}
+
+  misusedAtTopLevelCode.some(function(symbol) {
+    // Note that while just checking for the occurrence of the
+    // symbol name in the error message could result in false positives,
+    // a more rigorous test is difficult because different browsers
+    // log different messages, and the format of those messages may
+    // change over time.
+    //
+    // For example, if the user uses 'PI' in their code, it may result
+    // in any one of the following messages:
+    //
+    //   * 'PI' is undefined                           (Microsoft Edge)
+    //   * ReferenceError: PI is undefined             (Firefox)
+    //   * Uncaught ReferenceError: PI is not defined  (Chrome)
+
+    if (e.message && e.message.indexOf(symbol.name) !== -1) {
+      log('%cDid you just try to use p5.js\'s ' + symbol.name +
+          (symbol.type === 'function' ? '() ' : ' ') + symbol.type +
+          '? If so, you may want to ' +
+          'move it into your sketch\'s setup() function.\n\n' +
+          'For more details, see: ' + FAQ_URL,
+          'color: #B40033' /* Dark magenta */);
+      return true;
     }
   });
 }
+
+// Exposing this primarily for unit testing.
+p5.prototype._helpForMisusedAtTopLevelCode = helpForMisusedAtTopLevelCode;
 
 if (document.readyState !== 'complete') {
   window.addEventListener('error', helpForMisusedAtTopLevelCode, false);
@@ -13312,7 +13408,7 @@ if (document.readyState !== 'complete') {
 
 module.exports = p5;
 
-},{"./core":48}],52:[function(_dereq_,module,exports){
+},{"./constants":47,"./core":48}],52:[function(_dereq_,module,exports){
 /**
  * @module DOM
  * @submodule DOM
@@ -13496,6 +13592,41 @@ p5.Element.prototype.mousePressed = function (fxn) {
  * @param  {Function} fxn function to be fired when mouse wheel is
  *                    scrolled over the element.
  * @return {p5.Element}
+ * @example
+ * <div class='norender'><code>
+ * var cnv;
+ * var d;
+ * var g;
+ * function setup() {
+ *   cnv = createCanvas(100, 100);
+ *   cnv.mouseWheel(changeSize); // attach listener for
+ *                               // activity on canvas only
+ *   d = 10;
+ *   g = 100;
+ * }
+ *
+ * function draw() {
+ *   background(g);
+ *   ellipse(width/2, height/2, d, d);
+ * }
+ *
+ * // this function fires with mousewheel movement
+ * // anywhere on screen
+ * function mouseWheel() {
+ *   g = g + 10;
+ * }
+ *
+ * // this function fires with mousewheel movement
+ * // over canvas only
+ * function changeSize() {
+ *   if (event.wheelDelta > 0) {
+ *     d = d + 10;
+ *   } else {
+ *     d = d - 10;
+ *   }
+ * }
+ * </code></div>
+ *
  */
 p5.Element.prototype.mouseWheel = function (fxn) {
   attachListener('wheel', fxn, this);
@@ -13511,6 +13642,37 @@ p5.Element.prototype.mouseWheel = function (fxn) {
  * @param  {Function} fxn function to be fired when mouse is
  *                    released over the element.
  * @return {p5.Element}
+ * @example
+ * <div class='norender'><code>
+ * var cnv;
+ * var d;
+ * var g;
+ * function setup() {
+ *   cnv = createCanvas(100, 100);
+ *   cnv.mouseReleased(changeGray); // attach listener for
+ *                                  // activity on canvas only
+ *   d = 10;
+ *   g = 100;
+ * }
+ *
+ * function draw() {
+ *   background(g);
+ *   ellipse(width/2, height/2, d, d);
+ * }
+ *
+ * // this function fires after the mouse has been
+ * // released
+ * function mouseReleased() {
+ *   d = d + 10;
+ * }
+ *
+ * // this function fires after the mouse has been
+ * // released while on canvas
+ * function changeGray() {
+ *   g = random(0, 255);
+ * }
+ * </code></div>
+ *
  */
 p5.Element.prototype.mouseReleased = function (fxn) {
   attachListener('mouseup', fxn, this);
@@ -13528,6 +13690,36 @@ p5.Element.prototype.mouseReleased = function (fxn) {
  * @param  {Function} fxn function to be fired when mouse is
  *                    clicked over the element.
  * @return {p5.Element}
+ * @example
+ * var cnv;
+ * var d;
+ * var g;
+ * function setup() {
+ *   cnv = createCanvas(100, 100);
+ *   cnv.mouseClicked(changeGray); // attach listener for
+ *                                 // activity on canvas only
+ *   d = 10;
+ *   g = 100;
+ * }
+ *
+ * function draw() {
+ *   background(g);
+ *   ellipse(width/2, height/2, d, d);
+ * }
+ *
+ * // this function fires after the mouse has been
+ * // clicked anywhere
+ * function mouseClicked() {
+ *   d = d + 10;
+ * }
+ *
+ * // this function fires after the mouse has been
+ * // clicked on canvas
+ * function changeGray() {
+ *   g = random(0, 255);
+ * }
+ * </code></div>
+ *
  */
 p5.Element.prototype.mouseClicked = function (fxn) {
   attachListener('click', fxn, this);
@@ -13543,6 +13735,43 @@ p5.Element.prototype.mouseClicked = function (fxn) {
  * @param  {Function} fxn function to be fired when mouse is
  *                    moved over the element.
  * @return {p5.Element}
+ * @example
+ * <div class='norender'><code>
+ * var cnv;
+ * var d = 30;
+ * var g;
+ * function setup() {
+ *   cnv = createCanvas(100, 100);
+ *   cnv.mouseMoved(changeSize); // attach listener for
+ *                               // activity on canvas only
+ *   d = 10;
+ *   g = 100;
+ * }
+ *
+ * function draw() {
+ *   background(g);
+ *   fill(200);
+ *   ellipse(width/2, height/2, d, d);
+ * }
+ *
+ * // this function fires when mouse moves anywhere on
+ * // page
+ * function mouseMoved() {
+ *   g = g + 5;
+ *   if (g > 255) {
+ *     g = 0;
+ *   }
+ * }
+ *
+ * // this function fires when mouse moves over canvas
+ * function changeSize() {
+ *   d = d + 2;
+ *   if (d > 100) {
+ *     d = 0;
+ *   }
+ * }
+ * </code></div>
+ *
  */
 p5.Element.prototype.mouseMoved = function (fxn) {
   attachListener('mousemove', fxn, this);
@@ -13559,6 +13788,29 @@ p5.Element.prototype.mouseMoved = function (fxn) {
  * @param  {Function} fxn function to be fired when mouse is
  *                    moved over the element.
  * @return {p5.Element}
+ * @example
+ * <div class='norender'><code>
+ * var cnv;
+ * var d;
+ * var g;
+ * function setup() {
+ *   cnv = createCanvas(100, 100);
+ *   cnv.mouseOver(changeGray);
+ *   d = 10;
+ * }
+ *
+ * function draw() {
+ *   ellipse(width/2, height/2, d, d);
+ * }
+ *
+ * function changeGray() {
+ *   d = d + 10;
+ *   if (d > 100) {
+ *     d = 0;
+ *   }
+ * }
+ * </code></div>
+ *
  */
 p5.Element.prototype.mouseOver = function (fxn) {
   attachListener('mouseover', fxn, this);
@@ -13575,6 +13827,52 @@ p5.Element.prototype.mouseOver = function (fxn) {
  * @param  {Function} fxn function to be fired when the value of an
  * element changes.
  * @return {p5.Element}
+ * @example
+ * <div><code>
+ * var sel;
+ *
+ * function setup() {
+ *   textAlign(CENTER);
+ *   background(200);
+ *   sel = createSelect();
+ *   sel.position(10, 10);
+ *   sel.option('pear');
+ *   sel.option('kiwi');
+ *   sel.option('grape');
+ *   sel.changed(mySelectEvent);
+ * }
+ *
+ * function mySelectEvent() {
+ *   var item = sel.value();
+ *   background(200);
+ *   text("it's a "+item+"!", 50, 50);
+ * }
+ * </code></div>
+ * <div><code>
+ * var checkbox;
+ * var cnv;
+ *
+ * function setup() {
+ *   checkbox = createCheckbox(" fill");
+ *   checkbox.changed(changeFill);
+ *   cnv = createCanvas(100, 100);
+ *   cnv.position(0, 30);
+ *   noFill();
+ * }
+ *
+ * function draw() {
+ *   background(200);
+ *   ellipse(50, 50, 50, 50);
+ * }
+ *
+ * function changeFill() {
+ *   if (checkbox.checked()) {
+ *     fill(0);
+ *   } else {
+ *     noFill();
+ *   }
+ * }
+ * </code></div>
  */
 p5.Element.prototype.changed = function (fxn) {
   attachListener('change', fxn, this);
@@ -13591,6 +13889,19 @@ p5.Element.prototype.changed = function (fxn) {
  * @method input
  * @param  {Function} fxn function to be fired on user input.
  * @return {p5.Element}
+ * @example
+ * <div class='norender'><code>
+ * // Open your console to see the output
+ * function setup() {
+ *   var inp = createInput('');
+ *   inp.input(myInputEvent);
+ * }
+ *
+ * function myInputEvent() {
+ *   console.log('you are typing: ', this.value());
+ * }
+ * </code></div>
+ *
  */
 p5.Element.prototype.input = function (fxn) {
   attachListener('input', fxn, this);
@@ -13606,6 +13917,29 @@ p5.Element.prototype.input = function (fxn) {
  * @param  {Function} fxn function to be fired when mouse is
  *                    moved off the element.
  * @return {p5.Element}
+ * @example
+ * <div class='norender'><code>
+ * var cnv;
+ * var d;
+ * var g;
+ * function setup() {
+ *   cnv = createCanvas(100, 100);
+ *   cnv.mouseOut(changeGray);
+ *   d = 10;
+ * }
+ *
+ * function draw() {
+ *   ellipse(width/2, height/2, d, d);
+ * }
+ *
+ * function changeGray() {
+ *   d = d + 10;
+ *   if (d > 100) {
+ *     d = 0;
+ *   }
+ * }
+ * </code></div>
+ *
  */
 p5.Element.prototype.mouseOut = function (fxn) {
   attachListener('mouseout', fxn, this);
@@ -14206,7 +14540,7 @@ p5.Renderer2D.prototype.background = function() {
   } else {
     var curFill = this.drawingContext.fillStyle;
     // create background rect
-    var color = this._pInst.color.apply(this._pInst, arguments);
+    var color = this._pInst.color.apply(this, arguments);
     var newFill = color.toString();
     this.drawingContext.fillStyle = newFill;
     this.drawingContext.fillRect(0, 0, this.width, this.height);
@@ -14223,13 +14557,13 @@ p5.Renderer2D.prototype.clear = function() {
 p5.Renderer2D.prototype.fill = function() {
 
   var ctx = this.drawingContext;
-  var color = this._pInst.color.apply(this._pInst, arguments);
+  var color = this._pInst.color.apply(this, arguments);
   ctx.fillStyle = color.toString();
 };
 
 p5.Renderer2D.prototype.stroke = function() {
   var ctx = this.drawingContext;
-  var color = this._pInst.color.apply(this._pInst, arguments);
+  var color = this._pInst.color.apply(this, arguments);
   ctx.strokeStyle = color.toString();
 };
 
@@ -15446,7 +15780,7 @@ var defaultId = 'defaultCanvas0'; // this gets set again in createCanvas
  * @method createCanvas
  * @param  {Number} w width of the canvas
  * @param  {Number} h height of the canvas
- * @param  optional:{String} renderer 'p2d' | 'webgl'
+ * @param  {String} [renderer] 'p2d' | 'webgl'
  * @return {Object} canvas generated
  * @example
  * <div>
@@ -15769,16 +16103,19 @@ window.performance.now = (function(){
  * shim for Uint8ClampedArray.slice
  * (allows arrayCopy to work with pixels[])
  * with thanks to http://halfpapstudios.com/blog/tag/html5-canvas/
+ * Enumerable set to false to protect for...in from
+ * Uint8ClampedArray.prototype pollution.
  */
 (function () {
   'use strict';
-
-  if (typeof Uint8ClampedArray !== 'undefined') {
-    //Firefox and Chrome
-    Uint8ClampedArray.prototype.slice = Array.prototype.slice;
+  if (typeof Uint8ClampedArray !== 'undefined' &&
+      !Uint8ClampedArray.prototype.slice) {
+    Object.defineProperty(Uint8ClampedArray.prototype, 'slice', {
+      value: Array.prototype.slice,
+      writable: true, configurable: true, enumerable: false
+    });
   }
 }());
-
 
 },{}],58:[function(_dereq_,module,exports){
 /**
@@ -17186,6 +17523,27 @@ p5.prototype._updatePAccelerations = function(){
 /**
  * The system variable rotationX always contains the rotation of the
  * device along the x axis. Value is represented as 0 to +/-180 degrees.
+ * <br><br>
+ * Note: The order the rotations are called is important, ie. if used
+ * together, it must be called in the order Z-X-Y or there might be
+ * unexpected behaviour.
+ *
+ * @example
+ * <div>
+ * <code>
+ * function setup(){
+ *   createCanvas(100, 100, WEBGL);
+ * }
+ *
+ * function draw(){
+ *   background(200);
+ *   //rotateZ(radians(rotationZ));
+ *   rotateX(radians(rotationX));
+ *   //rotateY(radians(rotationY));
+ *   box(200, 200, 200);
+ * }
+ * </code>
+ * </div>
  *
  * @property rotationX
  */
@@ -17193,7 +17551,28 @@ p5.prototype.rotationX = 0;
 
 /**
  * The system variable rotationY always contains the rotation of the
- * device along the y axis. Value is represented as 0 to +/-180 degrees.
+ * device along the y axis. Value is represented as 0 to +/-90 degrees.
+ * <br><br>
+ * Note: The order the rotations are called is important, ie. if used
+ * together, it must be called in the order Z-X-Y or there might be
+ * unexpected behaviour.
+ *
+ * @example
+ * <div>
+ * <code>
+ * function setup(){
+ *   createCanvas(100, 100, WEBGL);
+ * }
+ *
+ * function draw(){
+ *   background(200);
+ *   //rotateZ(radians(rotationZ));
+ *   //rotateX(radians(rotationX));
+ *   rotateY(radians(rotationY));
+ *   box(200, 200, 200);
+ * }
+ * </code>
+ * </div>
  *
  * @property rotationY
  */
@@ -17205,6 +17584,27 @@ p5.prototype.rotationY = 0;
  * <br><br>
  * Unlike rotationX and rotationY, this variable is available for devices
  * with a built-in compass only.
+ * <br><br>
+ * Note: The order the rotations are called is important, ie. if used
+ * together, it must be called in the order Z-X-Y or there might be
+ * unexpected behaviour.
+ *
+ * @example
+ * <div>
+ * <code>
+ * function setup(){
+ *   createCanvas(100, 100, WEBGL);
+ * }
+ *
+ * function draw(){
+ *   background(200);
+ *   rotateZ(radians(rotationZ));
+ *   //rotateX(radians(rotationX));
+ *   //rotateY(radians(rotationY));
+ *   box(200, 200, 200);
+ * }
+ * </code>
+ * </div>
  *
  * @property rotationZ
  */
@@ -17251,7 +17651,7 @@ p5.prototype.pRotationX = 0;
 /**
  * The system variable pRotationY always contains the rotation of the
  * device along the y axis in the frame previous to the current frame. Value
- * is represented as 0 to +/-180 degrees.
+ * is represented as 0 to +/-90 degrees.
  * <br><br>
  * pRotationY can also be used with rotationY to determine the rotate
  * direction of the device along the Y-axis.
@@ -17751,6 +18151,9 @@ p5.prototype.keyCode = 0;
  * </div>
  */
 p5.prototype._onkeydown = function (e) {
+  if (downKeys[e.which]) { // prevent multiple firings
+    return;
+  }
   this._setProperty('isKeyPressed', true);
   this._setProperty('keyIsPressed', true);
   this._setProperty('keyCode', e.which);
@@ -17799,6 +18202,7 @@ p5.prototype._onkeyup = function (e) {
   var keyReleased = this.keyReleased || window.keyReleased;
   this._setProperty('isKeyPressed', false);
   this._setProperty('keyIsPressed', false);
+  this._setProperty('_lastKeyCodeTyped', null);
   downKeys[e.which] = false;
   //delete this._downKeys[e.which];
   var key = String.fromCharCode(e.which);
@@ -17849,7 +18253,11 @@ p5.prototype._onkeyup = function (e) {
  * </div>
  */
 p5.prototype._onkeypress = function (e) {
+  if (e.which === this._lastKeyCodeTyped) { // prevent multiple firings
+    return;
+  }
   this._setProperty('keyCode', e.which);
+  this._setProperty('_lastKeyCodeTyped', e.which); // track last keyCode
   this._setProperty('key', String.fromCharCode(e.which));
   var keyTyped = this.keyTyped || window.keyTyped;
   if (typeof keyTyped === 'function') {
@@ -19728,12 +20136,17 @@ p5.prototype.saveCanvas = function() {
  *  all of the images that have just been created.
  *
  *  @method saveFrames
- *  @param  {[type]}   filename  [description]
- *  @param  {[type]}   extension [description]
- *  @param  {[type]}   _duration [description]
- *  @param  {[type]}   _fps      [description]
- *  @param  {[Function]} callback  [description]
- *  @return {[type]}             [description]
+ *  @param  {String}   filename
+ *  @param  {String}   extension 'jpg' or 'png'
+ *  @param  {Number}   duration  Duration in seconds to save the frames for.
+ *  @param  {Number}   framerate  Framerate to save the frames in.
+ *  @param  {Function} [callback] A callback function that will be executed
+                                  to handle the image data. This function
+                                  should accept an array as argument. The
+                                  array will contain the spcecified number of
+                                  frames of objects. Each object have three
+                                  properties: imageData - an
+                                  image/octet-stream, filename and extension.
  */
 p5.prototype.saveFrames = function(fName, ext, _duration, _fps, callback) {
   var duration = _duration || 3;
@@ -20005,8 +20418,8 @@ p5.prototype.image =
     if (img.elt && img.elt.videoWidth && !img.canvas) { // video no canvas
       var actualW = img.elt.videoWidth;
       var actualH = img.elt.videoHeight;
-      dWidth = sWidth || img.width;
-      dHeight = sHeight || img.width*actualH/actualW;
+      dWidth = sWidth || img.elt.width;
+      dHeight = sHeight || img.elt.width*actualH/actualW;
       sWidth = actualW;
       sHeight = actualH;
     } else {
@@ -20410,6 +20823,28 @@ p5.Image.prototype._setProperty = function (prop, value) {
  * Loads the pixels data for this image into the [pixels] attribute.
  *
  * @method loadPixels
+ * @example
+ * <div><code>
+ * var myImage;
+ * var halfImage;
+ *
+ * function preload() {
+ *   myImage = loadImage("assets/rockies.jpg");
+ * }
+ *
+ * function setup() {
+ *   myImage.loadPixels();
+ *   halfImage = 4 * width * height/2;
+ *   for(var i = 0; i < halfImage; i++){
+ *     myImage.pixels[i+halfImage] = myImage.pixels[i];
+ *   }
+ *   myImage.updatePixels();
+ * }
+ *
+ * function draw() {
+ *   image(myImage, 0, 0);
+ * }
+ * </code></div>
  */
 p5.Image.prototype.loadPixels = function(){
   p5.Renderer2D.prototype.loadPixels.call(this);
@@ -20428,6 +20863,28 @@ p5.Image.prototype.loadPixels = function(){
  *                              underlying canvas
  * @param {Integer|undefined} h height of the target update area for the
  *                              underlying canvas
+ * @example
+ * <div><code>
+ * var myImage;
+ * var halfImage;
+ *
+ * function preload() {
+ *   myImage = loadImage("assets/rockies.jpg");
+ * }
+ *
+ * function setup() {
+ *   myImage.loadPixels();
+ *   halfImage = 4 * width * height/2;
+ *   for(var i = 0; i < halfImage; i++){
+ *     myImage.pixels[i+halfImage] = myImage.pixels[i];
+ *   }
+ *   myImage.updatePixels();
+ * }
+ *
+ * function draw() {
+ *   image(myImage, 0, 0);
+ * }
+ * </code></div>
  */
 p5.Image.prototype.updatePixels = function(x, y, w, h){
   p5.Renderer2D.prototype.updatePixels.call(this, x, y, w, h);
@@ -20450,6 +20907,25 @@ p5.Image.prototype.updatePixels = function(x, y, w, h){
  * @param  {Number}               [h] height
  * @return {Array/Color | p5.Image}     color of pixel at x,y in array format
  *                                    [R, G, B, A] or p5.Image
+ * @example
+ * <div><code>
+ * var myImage;
+ * var c;
+ *
+ * function preload() {
+ *   myImage = loadImage("assets/rockies.jpg");
+ * }
+ *
+ * function setup() {
+ *   background(myImage);
+ *   noStroke();
+ *   c = myImage.get(60, 90);
+ *   fill(c);
+ *   rect(25, 25, 50, 50);
+ * }
+ *
+ * //get() returns color here
+ * </code></div>
  */
 p5.Image.prototype.get = function(x, y, w, h){
   return p5.Renderer2D.prototype.get.call(this, x, y, w, h);
@@ -20525,8 +21001,16 @@ p5.Image.prototype.resize = function(width, height){
   // reference to the backing canvas of a p5.Image. But since we do not
   // enforce that at the moment, I am leaving in the slower, but safer
   // implementation.
-  width = width || this.canvas.width;
-  height = height || this.canvas.height;
+
+  // auto-resize
+  if (width === 0 && height === 0) {
+    width = this.canvas.width;
+    height = this.canvas.height;
+  } else if (width === 0) {
+    width = this.canvas.width * height / this.canvas.height;
+  } else if (height === 0) {
+    height = this.canvas.height * width / this.canvas.width;
+  }
 
   var tempCanvas = document.createElement('canvas');
   tempCanvas.width = width;
@@ -20570,6 +21054,25 @@ p5.Image.prototype.resize = function(width, height){
  * @param  {Integer} dy Y coordinate of the destination's upper left corner
  * @param  {Integer} dw destination image width
  * @param  {Integer} dh destination image height
+ * @example
+ * <div><code>
+ * var photo;
+ * var bricks;
+ * var x;
+ * var y;
+ *
+ * function preload() {
+ *   photo = loadImage("assets/rockies.jpg");
+ *   bricks = loadImage("assets/bricks.jpg");
+ * }
+ *
+ * function setup() {
+ *   x = bricks.width/2;
+ *   y = bricks.height/2;
+ *   photo.copy(bricks, 0, 0, x, y, 0, 0, x, y);
+ *   image(photo, 0, 0);
+ * }
+ * </code></div>
  */
 p5.Image.prototype.copy = function () {
   p5.prototype.copy.apply(this, arguments);
@@ -20641,6 +21144,22 @@ p5.Image.prototype.mask = function(p5Image) {
  *                           opaque see Filters.js for docs on each available
  *                           filter
  * @param {Number|undefined} value
+ * @example
+ * <div><code>
+ * var photo1;
+ * var photo2;
+ *
+ * function preload() {
+ *   photo1 = loadImage("assets/rockies.jpg");
+ *   photo2 = loadImage("assets/rockies.jpg");
+ * }
+ *
+ * function setup() {
+ *   photo2.filter("gray");
+ *   image(photo1, 0, 0);
+ *   image(photo2, width/2, 0);
+ * }
+ * </code></div>
  */
 p5.Image.prototype.filter = function(operation, value) {
   Filters.apply(this.canvas, Filters[operation.toLowerCase()], value);
@@ -20683,6 +21202,24 @@ p5.Image.prototype.blend = function() {
  * @method save
  * @param {String} filename give your file a name
  * @param  {String} extension 'png' or 'jpg'
+ * @example
+ * <div><code>
+ * var photo;
+ *
+ * function preload() {
+ *   photo = loadImage("assets/rockies.jpg");
+ * }
+ *
+ * function draw() {
+ *   image(photo, 0, 0);
+ * }
+ *
+ * function keyTyped() {
+ *   if (key == 's') {
+ *     photo.save("photo", "png");
+ *   }
+ * }
+ * </code></div>
  */
 p5.Image.prototype.save = function(filename, extension) {
   var mimeType;
@@ -20794,7 +21331,7 @@ _dereq_('../color/p5.Color');
  * <code>
  * var pink = color(255, 102, 204);
  * loadPixels();
- * var d = pixelDensity;
+ * var d = pixelDensity();
  * var halfImage = 4 * (width * d) * (height/2 * d);
  * for (var i = 0; i < halfImage; i+=4) {
  *   pixels[i] = red(pink);
@@ -21159,7 +21696,7 @@ p5.prototype.get = function(x, y, w, h){
  *
  * function setup() {
  *   image(img, 0, 0);
- *   var d = pixelDensity;
+ *   var d = pixelDensity();
  *   var halfImage = 4 * (img.width * d) *
        (img.height/2 * d);
  *   loadPixels();
@@ -21267,8 +21804,8 @@ p5.prototype.set = function (x, y, imgOrCol) {
  *
  * function setup() {
  *   image(img, 0, 0);
- *   var halfImage = 4 * (img.width * pixelDensity) *
- *     (img.height * pixelDensity/2);
+ *   var halfImage = 4 * (img.width * pixelDensity()) *
+ *     (img.height * pixelDensity()/2);
  *   loadPixels();
  *   for (var i = 0; i < halfImage; i++) {
  *     pixels[i+halfImage] = pixels[i];
@@ -21893,8 +22430,8 @@ p5.prototype.loadTable = function (path) {
       if (header) {
         t.columns = records.shift();
       } else {
-        for (i = 0; i < records.length; i++) {
-          t.columns[i] = i.toString();
+        for (i = 0; i < records[0].length; i++) {
+          t.columns[i] = 'null';
         }
       }
       var row;
@@ -22504,7 +23041,7 @@ function escapeHelper(content) {
  *  @method saveTable
  *  @param  {p5.Table} Table  the Table object to save to a file
  *  @param  {String} filename the filename to which the Table should be saved
- *  @param  {[String]} options  can be one of "tsv", "csv", or "html"
+ *  @param  {String} [options]  can be one of "tsv", "csv", or "html"
  *  @example
  *  <div><code>
  *  var table;
@@ -24588,7 +25125,7 @@ p5.prototype.round = Math.round;
  *   noStroke();
  *   fill(0);
  *   text("x = " + x1, 0, y1 + spacing);
- *   text("sqrt(x) = " + x2, 0, y2 + spacing);
+ *   text("sq(x) = " + x2, 0, y2 + spacing);
  * }
  * </code></div>
  */
@@ -28028,7 +28565,7 @@ p5.prototype.append = function(array, value) {
  * @param {Number} [srcPosition] starting position in the source Array
  * @param {Array}  dst           the destination Array
  * @param {Number} [dstPosition] starting position in the destination Array
- * @param {Nimber} [length]      number of Array elements to be copied
+ * @param {Number} [length]      number of Array elements to be copied
  *
  * @example
  *  <div class="norender"><code>
