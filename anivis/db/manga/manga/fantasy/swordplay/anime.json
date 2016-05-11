@@ -1,0 +1,1 @@
+{"name": "manga", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "manga", "children": [{"isGenre": "yes", "name": "fantasy", "children": [{"isTheme": "yes", "name": "swordplay", "children": [{"isMovie": "yes", "name": "Tales of Destiny"}, {"isMovie": "yes", "name": "\u00dcbel Blatt"}, {"isMovie": "yes", "name": "Berserk"}]}]}]}]}

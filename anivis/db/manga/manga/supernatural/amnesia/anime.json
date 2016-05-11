@@ -1,0 +1,1 @@
+{"name": "manga", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "manga", "children": [{"isGenre": "yes", "name": "supernatural", "children": [{"isTheme": "yes", "name": "amnesia", "children": [{"isMovie": "yes", "name": "Elfen Lied"}, {"isMovie": "yes", "name": "Demon from Afar"}, {"isMovie": "yes", "name": "Ushiro no Shindere-san"}]}]}]}]}

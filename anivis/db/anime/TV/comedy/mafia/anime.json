@@ -1,0 +1,1 @@
+{"name": "anime", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "TV", "children": [{"isGenre": "yes", "name": "comedy", "children": [{"isTheme": "yes", "name": "mafia", "children": [{"isMovie": "yes", "name": "Katekyo Hitman Reborn!"}, {"isMovie": "yes", "name": "Cuticle Detective Inaba"}, {"isMovie": "yes", "name": "Baccano!"}]}]}]}]}

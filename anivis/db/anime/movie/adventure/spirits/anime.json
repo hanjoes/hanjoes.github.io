@@ -1,0 +1,1 @@
+{"name": "anime", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "movie", "children": [{"isGenre": "yes", "name": "adventure", "children": [{"isTheme": "yes", "name": "spirits", "children": [{"isMovie": "yes", "name": "Rebirth of Buddha"}, {"isMovie": "yes", "name": "Princess Mononoke"}, {"isMovie": "yes", "name": "xxxHOLiC the Movie: A Midsummer Night's Dream"}]}]}]}]}

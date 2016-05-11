@@ -1,0 +1,1 @@
+{"name": "manga", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "manga", "children": [{"isGenre": "yes", "name": "psychological", "children": [{"isTheme": "yes", "name": "mafia", "children": [{"isMovie": "yes", "name": "Akagi"}, {"isMovie": "yes", "name": "Ushijima the Loan Shark"}]}]}]}]}

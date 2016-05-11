@@ -1,0 +1,1 @@
+{"name": "manga", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "manga", "children": [{"isGenre": "yes", "name": "supernatural", "children": [{"isTheme": "yes", "name": "delinquents", "children": [{"isMovie": "yes", "name": "Shibatora"}, {"isMovie": "yes", "name": "Wolf Guy"}, {"isMovie": "yes", "name": "Reborn!"}, {"isMovie": "yes", "name": "Beelzebub"}]}]}]}]}

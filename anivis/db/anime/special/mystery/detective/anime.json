@@ -1,0 +1,1 @@
+{"name": "anime", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "special", "children": [{"isGenre": "yes", "name": "mystery", "children": [{"isTheme": "yes", "name": "detective", "children": [{"isMovie": "yes", "name": "Lupin III vs. Detective Conan"}, {"isMovie": "yes", "name": "Death Note Relight 2 - L's Successors"}]}]}]}]}

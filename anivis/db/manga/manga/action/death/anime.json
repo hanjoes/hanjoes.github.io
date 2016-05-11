@@ -1,0 +1,1 @@
+{"name": "manga", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "manga", "children": [{"isGenre": "yes", "name": "action", "children": [{"isTheme": "yes", "name": "death", "children": [{"isMovie": "yes", "name": "Akame ga KILL!"}, {"isMovie": "yes", "name": "Deadman Wonderland"}, {"isMovie": "yes", "name": "Berserk"}]}]}]}]}

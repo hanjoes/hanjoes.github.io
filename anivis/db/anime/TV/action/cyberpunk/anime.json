@@ -1,0 +1,1 @@
+{"name": "anime", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "TV", "children": [{"isGenre": "yes", "name": "action", "children": [{"isTheme": "yes", "name": "cyberpunk", "children": [{"isMovie": "yes", "name": "Bubblegum Crisis: Tokyo 2040"}, {"isMovie": "yes", "name": "Psycho-Pass"}, {"isMovie": "yes", "name": "Ghost in the Shell: Stand Alone Complex"}]}]}]}]}

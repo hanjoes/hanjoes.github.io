@@ -1,0 +1,1 @@
+{"name": "manga", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "manga", "children": [{"isGenre": "yes", "name": "horror", "children": [{"isTheme": "yes", "name": "survival game", "children": [{"isMovie": "yes", "name": "Tomodachi x Monster"}, {"isMovie": "yes", "name": "Doubt"}, {"isMovie": "yes", "name": "As the Gods Will: The Second Series"}]}]}]}]}

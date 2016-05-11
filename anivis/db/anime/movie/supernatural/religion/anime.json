@@ -1,0 +1,1 @@
+{"name": "anime", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "movie", "children": [{"isGenre": "yes", "name": "supernatural", "children": [{"isTheme": "yes", "name": "religion", "children": [{"isMovie": "yes", "name": "Rebirth of Buddha"}, {"isMovie": "yes", "name": "Buddha: The Great Departure"}, {"isMovie": "yes", "name": "Mystical Laws"}]}]}]}]}

@@ -1,0 +1,1 @@
+{"name": "manga", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "manga", "children": [{"isGenre": "yes", "name": "supernatural", "children": [{"isTheme": "yes", "name": "samurai", "children": [{"isMovie": "yes", "name": "Samurai Deeper Kyo"}, {"isMovie": "yes", "name": "Legend of Onikirimaru"}, {"isMovie": "yes", "name": "Dororo"}]}]}]}]}

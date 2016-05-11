@@ -1,0 +1,1 @@
+{"name": "manga", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "manga", "children": [{"isGenre": "yes", "name": "psychological", "children": [{"isTheme": "yes", "name": "coming of age", "children": [{"isMovie": "yes", "name": "Flowers of Evil"}, {"isMovie": "yes", "name": "20th Century Boys"}]}]}]}]}

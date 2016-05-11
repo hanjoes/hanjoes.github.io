@@ -1,0 +1,1 @@
+{"name": "anime", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "TV", "children": [{"isGenre": "yes", "name": "science fiction", "children": [{"isTheme": "yes", "name": "magical boy", "children": [{"isMovie": "yes", "name": "Brave of Gold Goldran"}, {"isMovie": "yes", "name": "Rockman.EXE Axess"}, {"isMovie": "yes", "name": "Wish Upon the Pleiades"}]}]}]}]}

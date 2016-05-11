@@ -1,0 +1,1 @@
+{"name": "anime", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "OAV", "children": [{"isGenre": "yes", "name": "adventure", "children": [{"isTheme": "yes", "name": "super robot", "children": [{"isMovie": "yes", "name": "Mazinkaiser: Shitou! Ankoku Daishogun"}, {"isMovie": "yes", "name": "New Getter Robo"}, {"isMovie": "yes", "name": "Getter Robo: Armageddon"}]}]}]}]}

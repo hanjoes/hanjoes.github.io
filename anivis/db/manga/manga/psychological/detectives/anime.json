@@ -1,0 +1,1 @@
+{"name": "manga", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "manga", "children": [{"isGenre": "yes", "name": "psychological", "children": [{"isTheme": "yes", "name": "detectives", "children": [{"isMovie": "yes", "name": "Case Closed"}, {"isMovie": "yes", "name": "MPD-Psycho"}, {"isMovie": "yes", "name": "Pluto"}]}]}]}]}

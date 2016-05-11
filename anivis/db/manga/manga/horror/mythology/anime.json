@@ -1,0 +1,1 @@
+{"name": "manga", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "manga", "children": [{"isGenre": "yes", "name": "horror", "children": [{"isTheme": "yes", "name": "mythology", "children": [{"isMovie": "yes", "name": "3x3 Eyes"}, {"isMovie": "yes", "name": "Inugami"}]}]}]}]}

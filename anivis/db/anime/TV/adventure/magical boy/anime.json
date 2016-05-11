@@ -1,0 +1,1 @@
+{"name": "anime", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "TV", "children": [{"isGenre": "yes", "name": "adventure", "children": [{"isTheme": "yes", "name": "magical boy", "children": [{"isMovie": "yes", "name": "Magi: The Labyrinth of Magic"}]}]}]}]}

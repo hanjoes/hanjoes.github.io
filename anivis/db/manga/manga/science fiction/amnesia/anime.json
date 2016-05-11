@@ -1,0 +1,1 @@
+{"name": "manga", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "manga", "children": [{"isGenre": "yes", "name": "science fiction", "children": [{"isTheme": "yes", "name": "amnesia", "children": [{"isMovie": "yes", "name": "20th Century Boys"}, {"isMovie": "yes", "name": "Bremen"}, {"isMovie": "yes", "name": "Elfen Lied"}]}]}]}]}

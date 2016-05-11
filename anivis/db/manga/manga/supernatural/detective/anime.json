@@ -1,0 +1,1 @@
+{"name": "manga", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "manga", "children": [{"isGenre": "yes", "name": "supernatural", "children": [{"isTheme": "yes", "name": "detective", "children": [{"isMovie": "yes", "name": "Shibatora"}, {"isMovie": "yes", "name": "Psychometrer Eiji"}, {"isMovie": "yes", "name": "Death Note"}]}]}]}]}

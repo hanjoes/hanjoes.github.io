@@ -1,0 +1,1 @@
+{"name": "manga", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "manga", "children": [{"isGenre": "yes", "name": "psychological", "children": [{"isTheme": "yes", "name": "love triangle", "children": [{"isMovie": "yes", "name": "Flowers of Evil"}, {"isMovie": "yes", "name": "Gantz"}]}]}]}]}

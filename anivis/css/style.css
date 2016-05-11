@@ -1,0 +1,136 @@
+.node {
+  cursor: pointer;
+  stroke: green;
+  stroke-width: 1.5px;
+}
+
+.link {
+  fill: none;
+  stroke: blue;
+  stroke-width: 1.5px;
+}
+
+span.rating {
+  font-family: 'Candal', sans-serif;
+  padding-left: 10px;
+}
+
+div#detail {
+  position: absolute;
+  text-align: left;
+  padding: 10px;
+  border-style: solid;
+  border-color: purple;
+  border-radius: 8px;
+  left: 1350px;
+  top: 158px;
+  height: 983px;
+  width: 347px;
+  overflow-y: scroll;
+}
+
+div.tooltip {
+  position: absolute;
+  text-align: center;
+  padding: 5px;
+  border: 1px;
+  border-style: solid;
+  border-color: purple;
+  border-radius: 8px;
+  pointer-events: none;
+  background: #C791DB;
+  opacity: 0;
+}
+
+svg#tree {
+  border-style: solid;
+  border-color: purple;
+  border-radius: 8px;
+  margin-top: 15px;
+}
+svg#ranking {
+  border-style: solid;
+  border-color: purple;
+  border-radius: 8px;
+  margin-top: 15px;
+  margin-left: 25px;
+  height: 1000px;
+}
+
+body {
+  font-family: 'Jura', sans-serif;
+  font-size: 12pt;
+}
+
+h1, h2 {
+  font-family: 'Jura', sans-serif;
+  color: purple;
+}
+
+h1 {
+  font-size: 50px;
+}
+
+span {
+  padding-left: 10px;
+}
+
+.page {
+  padding-left: 25px;
+}
+
+circle.node {
+  cursor: pointer;
+  stroke: #000;
+  stroke-width: .5px;
+  fill-opacity: 0.8;
+}
+
+line.link {
+  fill: none;
+  stroke-width: 1.5px;
+}
+
+.axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.axis .minor {
+  stroke: gray;
+  stroke-width: 1px;
+}
+
+.rankingRect:hover {
+  cursor: pointer;
+}
+
+ul, li {
+  display: inline;
+}
+
+div#details {
+  position: absolute;
+  top: 0;
+  left: 3000;
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+}
+
+div.text {
+  width: 200px;
+}
+
+select.filters {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+span {
+  padding-left: 10px;
+}

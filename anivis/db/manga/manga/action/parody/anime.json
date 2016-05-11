@@ -1,0 +1,1 @@
+{"name": "manga", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "manga", "children": [{"isGenre": "yes", "name": "action", "children": [{"isTheme": "yes", "name": "parody", "children": [{"isMovie": "yes", "name": "Kotaro Makaritoru!"}, {"isMovie": "yes", "name": "Hayate the Combat Butler"}, {"isMovie": "yes", "name": "Zettai Karen Children"}]}]}]}]}

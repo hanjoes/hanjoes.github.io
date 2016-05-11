@@ -1,0 +1,1 @@
+{"name": "anime", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "TV", "children": [{"isGenre": "yes", "name": "adventure", "children": [{"isTheme": "yes", "name": "gore", "children": [{"isMovie": "yes", "name": "Akame ga KILL!"}, {"isMovie": "yes", "name": "Hunter \u00d7 Hunter"}]}]}]}]}

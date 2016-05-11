@@ -1,0 +1,1 @@
+{"name": "manga", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "manga", "children": [{"isGenre": "yes", "name": "horror", "children": [{"isTheme": "yes", "name": "talking animals", "children": [{"isMovie": "yes", "name": "Inugami"}]}]}]}]}

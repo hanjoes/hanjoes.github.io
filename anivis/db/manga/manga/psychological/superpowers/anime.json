@@ -1,0 +1,1 @@
+{"name": "manga", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "manga", "children": [{"isGenre": "yes", "name": "psychological", "children": [{"isTheme": "yes", "name": "superpowers", "children": [{"isMovie": "yes", "name": "Maoh: Juvenile Remix"}, {"isMovie": "yes", "name": "Psyren"}]}]}]}]}

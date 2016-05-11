@@ -1,0 +1,1 @@
+{"name": "anime", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "TV", "children": [{"isGenre": "yes", "name": "science fiction", "children": [{"isTheme": "yes", "name": "gods", "children": [{"isMovie": "yes", "name": "Kyousougiga"}, {"isMovie": "yes", "name": "Aquarion Evol"}, {"isMovie": "yes", "name": "Cyborg 009"}]}]}]}]}

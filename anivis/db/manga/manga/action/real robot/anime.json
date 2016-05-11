@@ -1,0 +1,1 @@
+{"name": "manga", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "manga", "children": [{"isGenre": "yes", "name": "action", "children": [{"isTheme": "yes", "name": "real robot", "children": [{"isMovie": "yes", "name": "Mobile Suit Gundam 00"}, {"isMovie": "yes", "name": "Mobile Suit Gundam Katana"}, {"isMovie": "yes", "name": "Mobile Suit Gundam 00 2nd.Season"}]}]}]}]}

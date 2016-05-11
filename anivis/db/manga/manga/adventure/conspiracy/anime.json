@@ -1,0 +1,1 @@
+{"name": "manga", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "manga", "children": [{"isGenre": "yes", "name": "adventure", "children": [{"isTheme": "yes", "name": "conspiracy", "children": [{"isMovie": "yes", "name": "Suikoden III"}, {"isMovie": "yes", "name": "Arpeggio of Blue Steel"}, {"isMovie": "yes", "name": "Seven Deadly Sins"}]}]}]}]}

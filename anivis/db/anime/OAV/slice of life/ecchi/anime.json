@@ -1,0 +1,1 @@
+{"name": "anime", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "OAV", "children": [{"isGenre": "yes", "name": "slice of life", "children": [{"isTheme": "yes", "name": "ecchi", "children": [{"isMovie": "yes", "name": "Upotte!!"}, {"isMovie": "yes", "name": "Baby Princess 3D Paradise 0 [Love]"}, {"isMovie": "yes", "name": "Kyo no Gononi"}]}]}]}]}

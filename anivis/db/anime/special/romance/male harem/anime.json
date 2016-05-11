@@ -1,0 +1,1 @@
+{"name": "anime", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "special", "children": [{"isGenre": "yes", "name": "romance", "children": [{"isTheme": "yes", "name": "male harem", "children": [{"isMovie": "yes", "name": "Harukanaru Toki no Naka de 3: Kurenai no Tsuki"}, {"isMovie": "yes", "name": "Corda D'Oro ~secondo passo~"}]}]}]}]}

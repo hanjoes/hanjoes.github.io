@@ -1,0 +1,1 @@
+{"name": "manga", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "manga", "children": [{"isGenre": "yes", "name": "supernatural", "children": [{"isTheme": "yes", "name": "parody", "children": [{"isMovie": "yes", "name": "Mad Love Chase"}, {"isMovie": "yes", "name": "Hayate the Combat Butler"}, {"isMovie": "yes", "name": "Zettai Karen Children"}]}]}]}]}

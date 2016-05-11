@@ -1,0 +1,1 @@
+{"name": "anime", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "TV", "children": [{"isGenre": "yes", "name": "action", "children": [{"isTheme": "yes", "name": "ghosts", "children": [{"isMovie": "yes", "name": "Blood Lad"}, {"isMovie": "yes", "name": "RIN-NE"}, {"isMovie": "yes", "name": "Ushio & Tora"}]}]}]}]}

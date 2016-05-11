@@ -1,0 +1,1 @@
+{"name": "manga", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "manga", "children": [{"isGenre": "yes", "name": "psychological", "children": [{"isTheme": "yes", "name": "military", "children": [{"isMovie": "yes", "name": "Battle Royale II: Blitz Royale"}, {"isMovie": "yes", "name": "Berserk"}, {"isMovie": "yes", "name": "Akira"}]}]}]}]}

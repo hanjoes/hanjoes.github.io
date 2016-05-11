@@ -1,0 +1,1 @@
+{"name": "manga", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "manga", "children": [{"isGenre": "yes", "name": "tournament", "children": [{"isTheme": "yes", "name": "delinquents", "children": [{"isMovie": "yes", "name": "Shin Kotaro Makaritoru! Judo Hen"}, {"isMovie": "yes", "name": "Kotaro Makaritoru!"}, {"isMovie": "yes", "name": "Rookies"}]}]}]}]}

@@ -1,0 +1,1 @@
+{"name": "manga", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "manga", "children": [{"isGenre": "yes", "name": "romance", "children": [{"isTheme": "yes", "name": "Magical Girl", "children": [{"isMovie": "yes", "name": "Time Stranger Kyoko"}]}]}]}]}

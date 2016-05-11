@@ -1,0 +1,1 @@
+{"name": "anime", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "special", "children": [{"isGenre": "yes", "name": "comedy", "children": [{"isTheme": "yes", "name": "ninja", "children": [{"isMovie": "yes", "name": "Lupin III: the Last Job"}]}]}]}]}

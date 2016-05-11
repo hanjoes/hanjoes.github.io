@@ -1,0 +1,1 @@
+{"name": "manga", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "manga", "children": [{"isGenre": "yes", "name": "psychological", "children": [{"isTheme": "yes", "name": "demons", "children": [{"isMovie": "yes", "name": "Demon Ororon"}, {"isMovie": "yes", "name": "Betrayal Knows My Name"}, {"isMovie": "yes", "name": "Berserk"}]}]}]}]}

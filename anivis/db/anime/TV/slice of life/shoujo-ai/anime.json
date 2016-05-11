@@ -1,0 +1,1 @@
+{"name": "anime", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "TV", "children": [{"isGenre": "yes", "name": "slice of life", "children": [{"isTheme": "yes", "name": "shoujo-ai", "children": [{"isMovie": "yes", "name": "Kanamemo"}, {"isMovie": "yes", "name": "Non Non Biyori"}]}]}]}]}

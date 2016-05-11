@@ -1,0 +1,1 @@
+{"name": "anime", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "TV", "children": [{"isGenre": "yes", "name": "comedy", "children": [{"isTheme": "yes", "name": "swordplay", "children": [{"isMovie": "yes", "name": "Magi: The Labyrinth of Magic"}, {"isMovie": "yes", "name": "Chivalry of a Failed Knight"}]}]}]}]}

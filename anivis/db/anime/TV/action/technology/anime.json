@@ -1,0 +1,1 @@
+{"name": "anime", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "TV", "children": [{"isGenre": "yes", "name": "action", "children": [{"isTheme": "yes", "name": "technology", "children": [{"isMovie": "yes", "name": "Galilei Donna"}, {"isMovie": "yes", "name": "Solty Rei"}, {"isMovie": "yes", "name": "Accel World"}]}]}]}]}

@@ -1,0 +1,1 @@
+{"name": "manga", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "manga", "children": [{"isGenre": "yes", "name": "action", "children": [{"isTheme": "yes", "name": "gods", "children": [{"isMovie": "yes", "name": "Wanted! - Oda Eiichiro Tanpenshu"}, {"isMovie": "yes", "name": "Mythical Detective Loki Ragnarok"}, {"isMovie": "yes", "name": "Yu-Gi-Oh! R"}]}]}]}]}

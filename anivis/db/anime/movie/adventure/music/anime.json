@@ -1,0 +1,1 @@
+{"name": "anime", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "movie", "children": [{"isGenre": "yes", "name": "adventure", "children": [{"isTheme": "yes", "name": "music", "children": [{"isMovie": "yes", "name": "INTERSTELLA 5555: The 5tory of the 5ecret 5tar 5ystem"}]}]}]}]}

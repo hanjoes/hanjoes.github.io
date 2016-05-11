@@ -1,0 +1,1 @@
+{"name": "anime", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "TV", "children": [{"isGenre": "yes", "name": "drama", "children": [{"isTheme": "yes", "name": "Harem", "children": [{"isMovie": "yes", "name": "Shining Hearts"}, {"isMovie": "yes", "name": "Fruit of Grisaia"}, {"isMovie": "yes", "name": "Kanon"}, {"isMovie": "yes", "name": "Lady Jewelpet"}]}]}]}]}

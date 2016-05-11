@@ -1,0 +1,1 @@
+{"name": "anime", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "TV", "children": [{"isGenre": "yes", "name": "science fiction", "children": [{"isTheme": "yes", "name": "yuri", "children": [{"isMovie": "yes", "name": "Qwaser of Stigmata II"}, {"isMovie": "yes", "name": "Simoun"}, {"isMovie": "yes", "name": "RIN - Daughters of Mnemosyne"}]}]}]}]}

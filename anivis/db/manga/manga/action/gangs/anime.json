@@ -1,0 +1,1 @@
+{"name": "manga", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "manga", "children": [{"isGenre": "yes", "name": "action", "children": [{"isTheme": "yes", "name": "gangs", "children": [{"isMovie": "yes", "name": "Gangsta."}, {"isMovie": "yes", "name": "Kotaro Makaritoru!"}, {"isMovie": "yes", "name": "Sun-Ken Rock"}]}]}]}]}

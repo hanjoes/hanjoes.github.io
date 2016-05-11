@@ -1,0 +1,1 @@
+{"name": "manga", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "manga", "children": [{"isGenre": "yes", "name": "romance", "children": [{"isTheme": "yes", "name": "multiple personality", "children": [{"isMovie": "yes", "name": "Elfen Lied"}, {"isMovie": "yes", "name": "Rosario + Vampire"}, {"isMovie": "yes", "name": "3x3 Eyes"}]}]}]}]}

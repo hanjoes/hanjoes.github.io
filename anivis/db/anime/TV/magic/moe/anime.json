@@ -1,0 +1,1 @@
+{"name": "anime", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "TV", "children": [{"isGenre": "yes", "name": "magic", "children": [{"isTheme": "yes", "name": "moe", "children": [{"isMovie": "yes", "name": "Puella Magi Madoka Magica"}, {"isMovie": "yes", "name": "Strike Witches"}, {"isMovie": "yes", "name": "Kamichu!"}]}]}]}]}

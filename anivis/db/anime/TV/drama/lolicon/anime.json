@@ -1,0 +1,1 @@
+{"name": "anime", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "TV", "children": [{"isGenre": "yes", "name": "drama", "children": [{"isTheme": "yes", "name": "lolicon", "children": [{"isMovie": "yes", "name": "Kodomo no Jikan"}, {"isMovie": "yes", "name": "Listen to Me, Girls. I Am Your Father!"}, {"isMovie": "yes", "name": "Sky Girls"}]}]}]}]}

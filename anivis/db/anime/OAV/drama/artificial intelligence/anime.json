@@ -1,0 +1,1 @@
+{"name": "anime", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "OAV", "children": [{"isGenre": "yes", "name": "drama", "children": [{"isTheme": "yes", "name": "artificial intelligence", "children": [{"isMovie": "yes", "name": "Amuri in Star Ocean"}]}]}]}]}

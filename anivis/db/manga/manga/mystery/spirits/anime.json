@@ -1,0 +1,1 @@
+{"name": "manga", "isRoot": "yes", "children": [{"isMedia": "yes", "name": "manga", "children": [{"isGenre": "yes", "name": "mystery", "children": [{"isTheme": "yes", "name": "spirits", "children": [{"isMovie": "yes", "name": "Hakkenden: T\u014dh\u014d Hakken Ibun"}, {"isMovie": "yes", "name": "Psychometrer Eiji"}]}]}]}]}
